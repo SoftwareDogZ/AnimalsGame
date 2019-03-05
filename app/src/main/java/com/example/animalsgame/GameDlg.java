@@ -1,10 +1,15 @@
 package com.example.animalsgame;
 
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.style.UpdateAppearance;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +18,8 @@ import java.util.Random;
 import android.app.AlertDialog;
 
 public class GameDlg extends AppCompatActivity {
+
+    //private MediaPlayer mp = new MediaPlayer();
 
     String[] animal_images = new String[]{"bird", "cat", "fish", "honey", "house", "pig", "sun"};
 
@@ -36,6 +43,10 @@ public class GameDlg extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gamedlg);
+
+        //final MediaPlayer mp = MediaPlayer.create(this, R.raw.supermario);
+        //mp.start();
+
         ResetImages();
 
         ((ImageView) findViewById(R.id.image_one)).setOnClickListener(new View.OnClickListener() {
@@ -70,8 +81,16 @@ public class GameDlg extends AppCompatActivity {
             }
         });
 
+        ((Button) findViewById(R.id.next_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ResetImages();
+            }
+        });
+
         ((TextView) findViewById(R.id.userscores_textview)).setText(String.valueOf(user_scores));
     }
+
 
     //Reset the four images displayed
     public void ResetImages(){
@@ -95,31 +114,45 @@ public class GameDlg extends AppCompatActivity {
         correct_choice = image_indexes[random.nextInt(4)];
         ((TextView) findViewById(R.id.animal_btn)).setText(animal_images[correct_choice]);
 
+        ((Button) findViewById(R.id.next_btn)).setEnabled(false);
+
     }
 
     //Determine if the user's choice is correct
     public void DetermineChoice(int uc, int ucv){
         //user's choice is correct
         if(uc == correct_choice){
-            ((ImageView) findViewById(ucv)).setImageResource(R.mipmap.bird_okartboard1xxxhdpi);
-
-            try{
-                Thread.currentThread().sleep(1000);
-            }catch (InterruptedException e){
-
-            }
+            ((ImageView) findViewById(ucv)).setImageResource(image_ok_ids[uc]);
 
             user_scores++;
             ((TextView) findViewById(R.id.userscores_textview)).setText(String.valueOf(user_scores));
 
-            ResetImages();
+            ((Button) findViewById(R.id.next_btn)).setEnabled(true);
+
         }
         else {
+
             ((ImageView) findViewById(ucv)).setImageResource(image_no_ids[uc]);
 
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setTitle("Failed");
-            dlg.setMessage("You have got " + String.valueOf(user_scores) + "! Try again!");
+            dlg.setMessage("You have got " + String.valueOf(user_scores) + "scores! Try again!");
+            dlg.setPositiveButton("Try again!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    user_scores = 0;
+                    ((TextView) findViewById(R.id.userscores_textview)).setText(String.valueOf(user_scores));
+                    ResetImages();
+                }
+            });
+
+            dlg.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            dlg.show();
         }
     }
 }

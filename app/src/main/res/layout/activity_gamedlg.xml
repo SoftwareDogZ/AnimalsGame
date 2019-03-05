@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_blue"
-    tools:context=".gamedlg">
+    tools:context=".GameDlg">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -116,5 +116,19 @@
             android:textSize="30sp"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:fontFamily="@font/font_one"
+            android:text="next"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="@+id/animal_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/animal_btn"
+            app:layout_constraintTop_toTopOf="@+id/animal_btn" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>
